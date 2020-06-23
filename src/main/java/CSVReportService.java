@@ -1,4 +1,3 @@
-import model.CombinedInfo;
 import model.Person;
 import model.Transaction;
 import repositories.TransactionRepository;
@@ -6,7 +5,8 @@ import repositories.TransactionRepository;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 public class CSVReportService {
 
@@ -38,20 +38,19 @@ public class CSVReportService {
 
         List<Transaction> transactions = transactionRepository.getTransactions();
 
-List<CombinedInfo> combinedInfos =
-        transactions.stream()
+     //   Map<String, Long> sumTransactionPerEmail =
+
+
+                transactions.stream()
                 .filter(this::isInLastMonth)
-                 .map(ci -> new CombinedInfo((personsService.getPersonByEmailAddress(ci.getEmailAddress())), ci.getAmount()))
-                 .filter(combinedInfo -> combinedInfo.getPerson().isPresent())
-                 .collect(Collectors.toList());
+                .map(e -> {
+                    Map<Optional<Person>, Long> t = new HashMap<>();
+                    t.put(personsService.getPersonByEmailAddress(e.getEmailAddress()), e.getAmount());
+                            return t;
+                }).filter(map -> map.entrySet().isEmpty());
 
-combinedInfos.stream().map(combinedInfo -> combinedInfo.getPerson().get().getRoles()).
 
-
-
-//        collect(Collectors.toMap(ci ->
-
-         return header + "\n" + body;
+     return header + "\n" + body;
 
     }
 
@@ -60,6 +59,8 @@ combinedInfos.stream().map(combinedInfo -> combinedInfo.getPerson().get().getRol
         LocalDateTime lastMonth = LocalDateTime.now().minus(30, ChronoUnit.DAYS);
         return transaction.getDate().isAfter(lastMonth);
     }
+
+
 
 
 }

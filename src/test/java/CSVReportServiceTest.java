@@ -9,7 +9,6 @@ import repositories.TransactionRepository;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
@@ -52,7 +51,7 @@ public class CSVReportServiceTest {
         Mockito.stub(personService.getPersonByEmailAddress(Matchers.eq("john@test.com"))).toReturn(Optional.of(john));
         Mockito.stub(personService.getPersonByEmailAddress(Matchers.eq("jane@test.com"))).toReturn(Optional.of(jane));
         Mockito.stub(personService.getPersonByEmailAddress(Matchers.eq("bob@test.com"))).toReturn(Optional.of(bob));
-        Mockito.stub(personService.getAll()).toReturn(persons);
+//        Mockito.stub(personService.getAll()).toReturn(persons);
 
         // and
         List<Transaction> mockedTransactions = new ArrayList<>();
@@ -70,7 +69,7 @@ public class CSVReportServiceTest {
 
 
 
-        List<String> roles = csvReportService.getAverageConsumptionPerRoleDuringTheLastMonth();
+        List<Transaction> roles = csvReportService.getAverageConsumptionPerRoleDuringTheLastMonth();
         //  List<String> roles = transactionService.getPersonRolesOfAllTransactions();
 
         assertEquals(3, roles.size());
